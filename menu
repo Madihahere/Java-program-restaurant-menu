@@ -1,0 +1,118 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CuteRestaurantMenu extends JFrame {
+    private JLabel titleLabel;
+    private JLabel restaurantLabel; // Added label for "fooooodie Restaurant"
+    private JCheckBox[] checkBoxes;
+    private JButton orderButton;
+    private JLabel totalLabel;
+    private double totalPrice;
+
+    public CuteRestaurantMenu() {
+        initializeComponents();
+        createLayout();
+    }
+
+    private void initializeComponents() {
+        titleLabel = new JLabel("CHILLS and MILLZ");
+        titleLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+        titleLabel.setForeground(Color.MAGENTA);
+
+        restaurantLabel = new JLabel("FOOOOOODIE   RESTAURANT"); // Added label for "Madiha Restaurant"
+        restaurantLabel.setFont(new Font("calligraphy font", Font.BOLD, 15));
+        String s = "path/to/CalligraphyFont.ttf";
+        restaurantLabel.setForeground(Color.BLACK); // You can set your desired color
+
+        String[] menuItems = {
+                "Zinger - 500",
+                "Roll - 330",
+                "Mango Juice - 200",
+                "Broast - 370",
+                "Pizza - 500",
+                "Cake - 800",
+                "Water Bottle - 100",
+                "Club Sandwich - 450",
+                "Coffee - 240",
+                "Tea - 70",
+                "Fries - 140",
+                "Extra Cheese - 150",
+                "Extra Sauce - 100"
+        };
+
+        checkBoxes = new JCheckBox[menuItems.length];
+        for (int i = 0; i < menuItems.length; i++) {
+            checkBoxes[i] = new JCheckBox(menuItems[i]);
+            checkBoxes[i].setFont(new Font("Arial", Font.PLAIN, 14));
+            checkBoxes[i].setForeground(Color.BLUE);
+        }
+
+        orderButton = new JButton("Order");
+        orderButton.setBackground(Color.PINK);
+        orderButton.setForeground(Color.WHITE);
+        orderButton.setFont(new Font("Arial", Font.BOLD, 16));
+
+        totalLabel = new JLabel("Total: 0.00 Rupees");
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        totalLabel.setForeground(Color.RED);
+
+        // Add event listener to the order button
+        orderButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                calculateTotalPrice();
+            }
+        });
+    }
+
+    private void createLayout() {
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(checkBoxes.length + 4, 1)); // Increased the row count for the label
+        mainPanel.add(titleLabel);
+        mainPanel.add(restaurantLabel); 
+        for (JCheckBox checkBox : checkBoxes) {
+            mainPanel.add(checkBox);
+        }
+        mainPanel.add(orderButton);
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(totalLabel);
+
+        setTitle("Cute Restaurant Menu");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        add(mainPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+        pack();
+        setLocationRelativeTo(null);
+        setSize(600, 500);
+        getContentPane().setBackground(Color.YELLOW); // Background color
+        setVisible(true);
+    }
+
+    private void calculateTotalPrice() {
+        totalPrice = 0.0;
+        StringBuilder bill = new StringBuilder();
+
+        for (JCheckBox checkBox : checkBoxes) {
+            if (checkBox.isSelected()) {
+                String[] parts = checkBox.getText().split(" - ");
+                double itemPrice = Double.parseDouble(parts[1]);
+                totalPrice += itemPrice;
+                bill.append(checkBox.getText()).append("\n");
+            }
+        }
+
+        totalLabel.setText("Total: PKR " + String.format("%.2f", totalPrice));
+        JOptionPane.showMessageDialog(null, "Ordered Items:\n" + bill.toString() + "Total: PKR " + String.format("%.2f", totalPrice));
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new CuteRestaurantMenu();
+            }
+        });
+    }
+}
